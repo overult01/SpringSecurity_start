@@ -1,12 +1,24 @@
 package com.cos.security1.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.cos.security1.model.User;
+import com.cos.security1.repository.UserRepository;
 
 @Controller // 뷰 반환
 public class IndexController {
 
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 	@GetMapping({"", "/"})
 	public String index() {
 		// mustache(스프링에서 권장하는 템플릿엔진. jsp 대신)
@@ -15,10 +27,26 @@ public class IndexController {
 		return "index";
 	}
 	
-	// 디폴트 설정으로는 스프링 시큐리티가 가로챈다.(설정을 추후 바꿔주어야 한다)
-	@GetMapping("/login")
-	public @ResponseBody String login() {
-		return "login";
+	// 디폴트 설정으로는 스프링 시큐리티가 가로챈다.(설정을 추후 바꿔주어야 한다) -> SecudrityConfig 파일 생성 후 스프링시큐리티 디폴트 login페이지 작동안함 
+	@GetMapping("/loginform")
+	public String login() {
+		return "loginForm";
+	}
+
+	@GetMapping("/joinform")
+	public String joinForm() {
+		return "joinForm";
+	}
+
+	@PostMapping("/join")
+	public String join(User user) {
+		System.out.println(user.getUsername() + " " + user.getPassword() + " " + user.getEmail());
+		user.setRole("ROLE_USER");
+		String rawPassword = user.getPassword();
+		String encPassword = bCryptPasswordEncoder.encode(rawPassword); // bCryptPasswordEncoder: 비번 암호화 
+		user.setPassword(encPassword); // 인코딩된 password를 넣고 user정보를 save
+		userRepository.save(user); // 시큐리티로 로그인 불가: 패스워드가 암호화가 안되어서  -> 	BCryptPasswordEncoder로 해결 
+		return "redirect:/loginform";
 	}
 	
 	@GetMapping("/user")
@@ -35,15 +63,4 @@ public class IndexController {
 	public @ResponseBody String manager() {
 		return "manager";
 	}
-	
-	@GetMapping("/join")
-	public @ResponseBody String join() {
-		return "join";
-	}
-	
-	@GetMapping("/joinProc")
-	public @ResponseBody String loginProc() {
-		return "회원가입 완료됨!";
-	}
-
 }
