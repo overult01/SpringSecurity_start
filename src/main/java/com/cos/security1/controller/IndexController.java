@@ -29,10 +29,16 @@ public class IndexController {
 	
 	// 디폴트 설정으로는 스프링 시큐리티가 가로챈다.(설정을 추후 바꿔주어야 한다) -> SecudrityConfig 파일 생성 후 스프링시큐리티 디폴트 login페이지 작동안함 
 	@GetMapping("/loginform")
-	public String login() {
+	public String loginForm() {
 		return "loginForm";
 	}
-
+	
+	// 지금은 시큐리티가 인터셉트 
+	@PostMapping("/login")
+	public String login() {
+		return "login";
+	}
+	
 	@GetMapping("/joinform")
 	public String joinForm() {
 		return "joinForm";
@@ -59,7 +65,7 @@ public class IndexController {
 		return "admin";
 	}
 	
-	@GetMapping("/menager")
+	@GetMapping("/manager")
 	public @ResponseBody String manager() {
 		return "manager";
 	}
