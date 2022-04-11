@@ -11,4 +11,5 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	// 메서드가 호출되면 select * from user where username = 1? 이 호출된다.
 	public User findByUsername(String username); // JPA Query methods
 
+	
 }

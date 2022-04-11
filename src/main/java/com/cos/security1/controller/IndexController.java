@@ -110,9 +110,10 @@ public class IndexController {
 		return "데이터";
 	}
 	
-	// 일반로그인, OAuth로그인 모두 들어갈 수 있도록 PrincipalDetails 로 묶음.
+	// 일반로그인, OAuth로그인 모두 들어갈 수 있도록 PrincipalDetails 로 묶음.(분기할 필요x) 
 	@GetMapping("/user")
 	public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		System.out.println("principalDetails: " + principalDetails.getUser());
 		return "user";
 	}
 	

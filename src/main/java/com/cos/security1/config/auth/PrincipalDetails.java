@@ -26,12 +26,20 @@ import lombok.Setter;
 public class PrincipalDetails implements UserDetails, OAuth2User{ // PrincipalDetails가 두 타입을 묶어줄 수 있도록.(시큐리티 세션에 넣기위해)
 
 	private User user; // 콤포지션
+	private Map<String, Object> attributes;
 	
-	// 생성자
+	// 생성자(일반 로그인)
 	public PrincipalDetails(User user) {
 		this.user = user;
 	}
 
+	// 생성자(OAuth 로그인): attributes 객체를 통해서 User객체를 생성
+	public PrincipalDetails(User user, Map<String, Object> attributes) {
+		super();
+		this.user = user;
+		this.attributes = attributes;
+	}
+	
 	// 해당 User의 권한을 리턴
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -86,11 +94,13 @@ public class PrincipalDetails implements UserDetails, OAuth2User{ // PrincipalDe
 	// OAuth2User 메서드
 	@Override
 	public Map<String, Object> getAttributes() {
-		return null;
+		return attributes;
 	}
 
 	@Override
 	public String getName() {
+		// return attributes.get("sub");
 		return null;
 	}
+
 }
