@@ -1,6 +1,8 @@
 package com.cos.security1.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,6 +55,23 @@ public class IndexController {
 		user.setPassword(encPassword); // 인코딩된 password를 넣고 user정보를 save
 		userRepository.save(user); // 시큐리티로 로그인 불가: 패스워드가 암호화가 안되어서  -> 	BCryptPasswordEncoder로 해결 
 		return "redirect:/loginform";
+	}
+	
+	// SecuritConfig에서 secured어노테이션 활성화: securedEnabled = true
+	// @Secured: 권한 
+	@Secured("ROLE_ADMIN")
+	@GetMapping("/info")
+	public @ResponseBody String info() {
+		return "개인정보";
+	}
+
+	// SecuritConfig에서 preAuthorize 어노테이션 활성화: prePostEnabled = true 
+	// @PreAuthorize: 해당 메서드가 실행되기 직전에 실행 
+	// 여러개 걸고 싶을 떄 hasRole 사용 
+	@PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+	@GetMapping("/data")
+	public @ResponseBody String data() {
+		return "데이터";
 	}
 	
 	@GetMapping("/user")
