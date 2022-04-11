@@ -22,6 +22,10 @@ public class User {
 	private String password;
 	private String email;
 	private String role;
+	
+	private String provider; // 구글 
+	private String providerId; // 구글 등에서 받은 식별자
+	
 	@CreationTimestamp // 해당 컬럼의 기본값을 해당 데이터가 생성된 시각으로 지정.
 	private Timestamp createDate;
 	
